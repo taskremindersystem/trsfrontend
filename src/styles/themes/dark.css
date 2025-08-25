@@ -1,0 +1,26 @@
+/* Dark theme variables */
+[data-theme="dark"] {
+  --color-primary: var(--primary-400);
+  --color-primary-hover: var(--primary-300);
+  --color-primary-light: var(--primary-900);
+
+  --color-background: var(--gray-900);
+  --color-surface: var(--gray-800);
+  --color-surface-hover: var(--gray-700);
+
+  --color-text-primary: var(--gray-100);
+  --color-text-secondary: var(--gray-300);
+  --color-text-muted: var(--gray-400);
+
+  --color-border: var(--gray-700);
+  --color-border-hover: var(--gray-600);
+
+  --color-success: var(--success-500);
+  --color-success-light: var(--success-900);
+
+  --color-warning: var(--warning-500);
+  --color-warning-light: var(--warning-900);
+
+  --color-error: var(--error-500);
+  --color-error-light: var(--error-900);
+}

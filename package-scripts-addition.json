@@ -1,0 +1,18 @@
+{
+  "scripts": {
+    "analyze": "npm run build && npx bundle-analyzer build/static/js/*.js",
+    "test:coverage": "npm test -- --coverage --watchAll=false",
+    "lint": "eslint src --ext .js,.jsx",
+    "lint:fix": "eslint src --ext .js,.jsx --fix",
+    "format": "prettier --write src/**/*.{js,jsx,css,md}",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "eslint": "^8.19.0",
+    "eslint-config-react-app": "^7.0.1",
+    "prettier": "^2.7.1"
+  }
+}
