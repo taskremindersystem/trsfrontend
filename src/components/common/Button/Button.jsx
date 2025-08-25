@@ -1,5 +1,5 @@
 import React from 'react';
-import './Button.module.css';
+import styles from './Button.module.css';
 
 const Button = ({ 
   children, 
@@ -10,10 +10,20 @@ const Button = ({
   type = 'button',
   ...props 
 }) => {
+  // Convert variant and size to camelCase class names
+  const variantClass = `btn${variant.charAt(0).toUpperCase() + variant.slice(1)}`;
+  const sizeClass = `btn${size.charAt(0).toUpperCase() + size.slice(1)}`;
+  
+  const buttonClasses = [
+    styles.btn,
+    styles[variantClass],
+    styles[sizeClass]
+  ].filter(Boolean).join(' ');
+
   return (
     <button
       type={type}
-      className={`btn btn--${variant} btn--${size}`}
+      className={buttonClasses}
       onClick={onClick}
       disabled={disabled}
       {...props}

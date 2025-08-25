@@ -1,3 +1,4 @@
+/* Button.module.css */
 .btn {
   padding: 0.5rem 1rem;
   border: none;
@@ -6,6 +7,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
+  display: inline-block;
 }
 
 .btn:disabled {
@@ -13,31 +15,64 @@
   cursor: not-allowed;
 }
 
-.btn--primary {
+/* Primary variant */
+.btnPrimary {
   background-color: #3b82f6;
   color: white;
 }
 
-.btn--primary:hover:not(:disabled) {
+.btnPrimary:hover:not(:disabled) {
   background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
 }
 
-.btn--secondary {
+/* Secondary variant */
+.btnSecondary {
   background-color: #6b7280;
   color: white;
 }
 
-.btn--small {
+.btnSecondary:hover:not(:disabled) {
+  background-color: #4b5563;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
+}
+
+/* Danger variant */
+.btnDanger {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btnDanger:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+/* Outline variant */
+.btnOutline {
+  background-color: transparent;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+}
+
+.btnOutline:hover:not(:disabled) {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Size variants */
+.btnSmall {
   padding: 0.25rem 0.75rem;
   font-size: 0.875rem;
 }
 
-.btn--medium {
+.btnMedium {
   padding: 0.5rem 1rem;
   font-size: 1rem;
 }
 
-.btn--large {
+.btnLarge {
   padding: 0.75rem 1.5rem;
   font-size: 1.125rem;
 }

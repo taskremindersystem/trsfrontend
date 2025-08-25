@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import './TaskForm.module.css';
+import Button from '../../common/Button';
+import styles from './TaskForm.module.css';
 
 const TaskForm = () => {
   const [task, setTask] = useState({
@@ -24,10 +25,10 @@ const TaskForm = () => {
   };
 
   return (
-    <div className="task-form">
+    <div className={styles.taskForm}>
       <h3>Add New Task</h3>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label htmlFor="title">Task Title</label>
           <input
             type="text"
@@ -40,7 +41,7 @@ const TaskForm = () => {
           />
         </div>
         
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label htmlFor="description">Description</label>
           <textarea
             id="description"
@@ -52,8 +53,8 @@ const TaskForm = () => {
           />
         </div>
         
-        <div className="form-row">
-          <div className="form-group">
+        <div className={styles.formRow}>
+          <div className={styles.formGroup}>
             <label htmlFor="dueDate">Due Date</label>
             <input
               type="date"
@@ -64,7 +65,7 @@ const TaskForm = () => {
             />
           </div>
           
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="priority">Priority</label>
             <select
               id="priority"
@@ -79,7 +80,9 @@ const TaskForm = () => {
           </div>
         </div>
         
-        <button type="submit" className="submit-btn">Add Task</button>
+        <Button type="submit" variant="primary" size="medium">
+          Add Task
+        </Button>
       </form>
     </div>
   );
