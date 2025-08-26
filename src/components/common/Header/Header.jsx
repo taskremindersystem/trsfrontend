@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link,Outlet } from 'react-router-dom'; // Import Link for navigation
+import { Link,Outlet } from 'react-router-dom';
 
 // 🔹 Shared styles (accessible by all components)
 const userProfileStyle = {
@@ -98,10 +98,10 @@ const Header = ({ toggleSidebar }) => {
 
         {/* Desktop Navigation */}
         <nav style={desktopNavStyle}>
-          <Link to="/dashboard" style={navLinkStyle}>Dashboard</Link>
-          <Link to="/tasks" style={navLinkStyle}>Tasks</Link>
-          <Link to="/calendar" style={navLinkStyle}>Calendar</Link>
-          <Link to="/settings" style={navLinkStyle}>Settings</Link>
+          {/* <Link to="/dashboard" style={navLinkStyle}>Dashboard</Link> */}
+          <Link to="/get-tasks" style={navLinkStyle}>Tasks</Link>
+          {/* <Link to="/calendar" style={navLinkStyle}>Calendar</Link> */}
+          {/* <Link to="/settings" style={navLinkStyle}>Settings</Link> */}
           <Link to="/create-task" style={navLinkStyle}>Create Task</Link>
         </nav>
 
@@ -410,7 +410,7 @@ const TaskReminderApp = () => {
   };
 
   const appStyle = {
-    marginTop: '70px', // To avoid overlap with fixed header
+    marginTop: '70px',
     padding: '20px',
     minHeight: 'calc(100vh - 70px)',
     background: '#ffffff',
