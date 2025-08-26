@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Link,Outlet } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, Outlet } from 'react-router-dom';
+import { taskService } from '../../../services/taskService.js';
 
-// 🔹 Shared styles (accessible by all components)
+// Shared styles (accessible by all components)
 const userProfileStyle = {
   marginLeft: '20px',
   display: 'flex',
@@ -86,26 +87,19 @@ const Header = ({ toggleSidebar }) => {
   return (
     <header style={headerStyle}>
       <div style={headerContentStyle}>
-        {/* Mobile Menu Button */}
         <button style={menuButtonStyle} onClick={toggleSidebar}>
           ☰
         </button>
 
-        {/* Logo */}
         <div style={logoStyle}>
           <h2 style={logoTextStyle}>📋 Task Reminder</h2>
         </div>
 
-        {/* Desktop Navigation */}
         <nav style={desktopNavStyle}>
-          {/* <Link to="/dashboard" style={navLinkStyle}>Dashboard</Link> */}
           <Link to="/get-tasks" style={navLinkStyle}>Tasks</Link>
-          {/* <Link to="/calendar" style={navLinkStyle}>Calendar</Link> */}
-          {/* <Link to="/settings" style={navLinkStyle}>Settings</Link> */}
           <Link to="/create-task" style={navLinkStyle}>Create Task</Link>
         </nav>
 
-        {/* User Profile */}
         <div style={userProfileStyle}>
           <span style={userGreetingStyle}>Welcome, John!</span>
           <div style={userAvatarStyle}>👤</div>
@@ -118,19 +112,63 @@ const Header = ({ toggleSidebar }) => {
 // Sidebar Component
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [taskStats, setTaskStats] = useState({
+    total: 0,
+    completed: 0,
+    pending: 0,
+    overdue: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  // Load task statistics
+  useEffect(() => {
+    const loadTaskStats = async () => {
+      try {
+        setLoading(true);
+        const tasks = await taskService.getTasks();
+        
+        if (tasks && Array.isArray(tasks)) {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          
+          const stats = {
+            total: tasks.length,
+            completed: tasks.filter(task => task.completed || task.status === 'completed').length,
+            pending: tasks.filter(task => !task.completed && task.status !== 'completed').length,
+            overdue: tasks.filter(task => {
+              if (!task.dueDate || task.completed || task.status === 'completed') return false;
+              const dueDate = new Date(task.dueDate);
+              dueDate.setHours(0, 0, 0, 0);
+              return dueDate < today;
+            }).length
+          };
+          
+          setTaskStats(stats);
+        }
+      } catch (error) {
+        console.error('Error loading task stats:', error);
+        setTaskStats({ total: 0, completed: 0, pending: 0, overdue: 0 });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      loadTaskStats();
+    }
+  }, [isOpen]);
 
   const menuItems = [
     { id: 'dashboard', icon: '📊', label: 'Dashboard', path: '/dashboard' },
-    { id: 'tasks', icon: '✅', label: 'My Tasks', path: '/tasks', badge: '5' },
+    { id: 'tasks', icon: '✅', label: 'My Tasks', path: '/get-tasks', badge: taskStats.pending.toString() },
     { id: 'calendar', icon: '📅', label: 'Calendar', path: '/calendar' },
     { id: 'projects', icon: '📁', label: 'Projects', path: '/projects' },
     { id: 'team', icon: '👥', label: 'Team', path: '/team' },
     { id: 'reports', icon: '📈', label: 'Reports', path: '/reports' },
-    { id: 'create-task', icon: '➕', label: 'Create Task', path: '/create-task' },
   ];
 
   const quickActions = [
-    { icon: '➕', label: 'New Task', action: 'new-task' },
+    { icon: '➕', label: 'Create Task', action: 'create-task', path: '/create-task' },
     { icon: '📝', label: 'Quick Note', action: 'quick-note' },
     { icon: '⏰', label: 'Set Reminder', action: 'reminder' },
   ];
@@ -139,8 +177,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     setActiveSection(itemId);
   };
 
-  const handleQuickAction = (action) => {
-    alert(`Quick action: ${action}`);
+  const handleQuickAction = (action, path = null) => {
+    if (path) {
+      window.location.href = path;
+    } else {
+      alert(`Quick action: ${action}`);
+    }
   };
 
   const sidebarStyle = {
@@ -303,30 +345,50 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const summaryStatsStyle = {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
-    gap: '12px',
+    gap: '8px',
   };
 
   const statItemStyle = {
     textAlign: 'center',
-    padding: '12px 8px',
+    padding: '8px 6px',
     background: '#f8fafc',
-    borderRadius: '8px',
+    borderRadius: '6px',
     border: '1px solid #e2e8f0',
+  };
+
+  const overdueStatItemStyle = {
+    ...statItemStyle,
+    background: taskStats.overdue > 0 ? '#fef2f2' : '#f8fafc',
+    borderColor: taskStats.overdue > 0 ? '#fecaca' : '#e2e8f0',
   };
 
   const statNumberStyle = {
     display: 'block',
-    fontSize: '18px',
+    fontSize: '16px',
     fontWeight: 700,
     color: '#334155',
-    marginBottom: '4px',
+    marginBottom: '2px',
+  };
+
+  const overdueStatNumberStyle = {
+    ...statNumberStyle,
+    color: taskStats.overdue > 0 ? '#dc2626' : '#334155',
   };
 
   const statLabelStyle = {
-    fontSize: '11px',
+    fontSize: '10px',
     color: '#64748b',
     textTransform: 'uppercase',
     letterSpacing: '0.3px',
+  };
+
+  const loadingStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '20px',
+    color: '#64748b',
+    fontSize: '12px',
   };
 
   return (
@@ -358,7 +420,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 >
                   <span style={navIconStyle}>{item.icon}</span>
                   <span style={navLabelStyle}>{item.label}</span>
-                  {item.badge && <span style={navBadgeStyle}>{item.badge}</span>}
+                  {item.badge && item.badge !== '0' && (
+                    <span style={navBadgeStyle}>{item.badge}</span>
+                  )}
                 </Link>
               </li>
             ))}
@@ -371,7 +435,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             {quickActions.map((action, index) => (
               <button
                 key={index}
-                onClick={() => handleQuickAction(action.action)}
+                onClick={() => handleQuickAction(action.action, action.path)}
                 style={quickBtnStyle}
                 onMouseOver={e => (e.currentTarget.style.background = quickBtnHoverStyle.background)}
                 onMouseOut={e => (e.currentTarget.style.background = quickBtnStyle.background)}
@@ -385,16 +449,30 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         <div style={taskSummaryStyle}>
           <h4 style={taskSummaryH4Style}>Today's Overview</h4>
-          <div style={summaryStatsStyle}>
-            <div style={statItemStyle}>
-              <span style={statNumberStyle}>8</span>
-              <span style={statLabelStyle}>Total</span>
+          {loading ? (
+            <div style={loadingStyle}>
+              Loading...
             </div>
-            <div style={statItemStyle}>
-              <span style={statNumberStyle}>3</span>
-              <span style={statLabelStyle}>Done</span>
+          ) : (
+            <div style={summaryStatsStyle}>
+              <div style={statItemStyle}>
+                <span style={statNumberStyle}>{taskStats.total}</span>
+                <span style={statLabelStyle}>Total</span>
+              </div>
+              <div style={statItemStyle}>
+                <span style={statNumberStyle}>{taskStats.completed}</span>
+                <span style={statLabelStyle}>Done</span>
+              </div>
+              <div style={statItemStyle}>
+                <span style={statNumberStyle}>{taskStats.pending}</span>
+                <span style={statLabelStyle}>Pending</span>
+              </div>
+              <div style={overdueStatItemStyle}>
+                <span style={overdueStatNumberStyle}>{taskStats.overdue}</span>
+                <span style={statLabelStyle}>Overdue</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </aside>
     </>
@@ -422,7 +500,6 @@ const TaskReminderApp = () => {
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main style={{ padding: '20px' }}>
         <Outlet /> 
-        {/* Routing should be handled in App.js */}
       </main>
     </div>
   );

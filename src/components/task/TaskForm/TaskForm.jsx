@@ -136,6 +136,11 @@ const TaskForm = () => {
     setCreatedTaskId(null);
   };
 
+  const refreshForm = () => {
+    clearForm();
+    console.log('Form refreshed');
+  };
+
   return (
     <div style={{
       maxWidth: '800px',
@@ -154,17 +159,54 @@ const TaskForm = () => {
       }}>
         {/* Header */}
         <div style={{ marginBottom: '32px', borderBottom: '1px solid #DFE1E6', paddingBottom: '16px' }}>
-          <h1 style={{
-            fontSize: '20px',
-            fontWeight: '600',
-            color: '#172B4D',
-            margin: '0 0 8px 0',
+          <div style={{
             display: 'flex',
+            justifyContent: 'space-between',
             alignItems: 'center',
-            gap: '8px'
+            marginBottom: '8px'
           }}>
-            📋 Create Issue
-          </h1>
+            <h1 style={{
+              fontSize: '20px',
+              fontWeight: '600',
+              color: '#172B4D',
+              margin: '0',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              📋 Create Issue
+            </h1>
+            <button
+              onClick={refreshForm}
+              disabled={isSubmitting}
+              style={{
+                padding: '6px 12px',
+                border: '1px solid #DFE1E6',
+                backgroundColor: '#FFFFFF',
+                borderRadius: '3px',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                fontSize: '14px',
+                color: '#5E6C84',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                opacity: isSubmitting ? 0.6 : 1,
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                if (!isSubmitting) {
+                  e.target.style.backgroundColor = '#F4F5F7';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isSubmitting) {
+                  e.target.style.backgroundColor = '#FFFFFF';
+                }
+              }}
+            >
+              🔄 Refresh
+            </button>
+          </div>
           <p style={{
             color: '#5E6C84',
             margin: '0',
