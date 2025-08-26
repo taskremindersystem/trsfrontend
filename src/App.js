@@ -1,19 +1,18 @@
 import React from 'react';
 import './App.css';
-import Header from './components/common/Header/Header';
-import TaskList from './components/task/TaskList/TaskList';
-import TaskForm from './components/task/TaskForm/TaskForm';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import TaskReminderApp from './components/common/Header/Header'; // <-- This exports TaskReminderApp
+import TaskForm from './components/task/TaskForm/TaskForm.jsx';
 
 function App() {
   return (
-    <div className="App">
-      <Header />
-      <div className="main-content">
-        <h1>Task Reminder System</h1>
-        <TaskForm />
-        <TaskList />
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<TaskReminderApp />}>
+          <Route path="create-task" element={<TaskForm />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
